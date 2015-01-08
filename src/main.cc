@@ -75,7 +75,13 @@ GtkStyle* style_normal(GtkWidget *w)
 
   if (!style) {
     style = gtk_style_copy(gtk_widget_get_style(w));
-    style->fg[GTK_STATE_NORMAL] = (GdkColor){0, 0x0000, 0x0000, 0x0000};
+    GdkColor color;
+//    style->fg[GTK_STATE_NORMAL] = (GdkColor){0, 0x0000, 0x0000, 0x0000};
+    if(gtk_style_lookup_color(style,"color-normal",&color)) {
+      style->fg[GTK_STATE_NORMAL] = color;
+    } else {
+      style->fg[GTK_STATE_NORMAL] = (GdkColor){0, 0x0000, 0x0000, 0x0000};
+    }
     gtk_style_ref(style);
   }
   return style;
@@ -87,7 +93,12 @@ GtkStyle* style_notfound(GtkWidget *w)
 
   if (!style) {
     style = gtk_style_copy(gtk_widget_get_style(w));
-    style->fg[GTK_STATE_NORMAL] = (GdkColor){0, 0xFFFF, 0x0000, 0x0000};
+    GdkColor color;
+    if(gtk_style_lookup_color(style,"color-notfound",&color)) {
+      style->fg[GTK_STATE_NORMAL] = color;
+    } else {
+      style->fg[GTK_STATE_NORMAL] = (GdkColor){0, 0xFFFF, 0x0000, 0x0000};
+    }
     gtk_style_ref(style);
   }
   return style;
@@ -99,7 +110,12 @@ GtkStyle* style_notunique(GtkWidget *w)
 
   if (!style) {
     style = gtk_style_copy(gtk_widget_get_style(w));
-    style->fg[GTK_STATE_NORMAL] = (GdkColor){0, 0x0000, 0x0000, 0xFFFF};
+    GdkColor color;
+    if(gtk_style_lookup_color(style,"color-notunique",&color)) {
+      style->fg[GTK_STATE_NORMAL] = color;
+    } else {
+      style->fg[GTK_STATE_NORMAL] = (GdkColor){0, 0x0000, 0xFFFF, 0x0000};
+    }
     gtk_style_ref(style);
   }
   return style;
@@ -111,7 +127,12 @@ GtkStyle* style_unique(GtkWidget *w)
 
   if (!style) {
     style = gtk_style_copy(gtk_widget_get_style(w));
-    style->fg[GTK_STATE_NORMAL] = (GdkColor){0, 0x0000, 0xFFFF, 0x0000};
+    GdkColor color;
+    if(gtk_style_lookup_color(style,"color-unique",&color)) {
+      style->fg[GTK_STATE_NORMAL] = color;
+    } else {
+      style->fg[GTK_STATE_NORMAL] = (GdkColor){0, 0x0000, 0x0000, 0xFFFF};
+    }
     gtk_style_ref(style);
   }
   return style;
@@ -706,8 +727,7 @@ int main(int argc, char **argv)
   mtrace();
 #endif
 
-  gtk_init(&argc, &argv);
-
+  gtk_init(&argc, &argv);  
   dialog = gtk_dialog_new();
   gtk_widget_realize(dialog);
   gdk_window_set_decorations(dialog->window, GDK_DECOR_BORDER);
@@ -724,6 +744,7 @@ int main(int argc, char **argv)
   gtk_box_pack_start(GTK_BOX(gtk_dialog_get_content_area(GTK_DIALOG(dialog))), hhbox, FALSE, FALSE, 0);
 
   GtkWidget *label = gtk_label_new("Run program:");
+  gtk_widget_set_name(label,"Msh_Run_Label");
   gtk_widget_show(label);
   gtk_misc_set_alignment(GTK_MISC(label), 0.0, 1.0);
   gtk_misc_set_padding(GTK_MISC(label), 10, 0);
